@@ -22,7 +22,6 @@ class Employee:
         # del self.empCount
         # print(self.empCount)
 
-    @staticmethod
     def displayCount():
         print("总人数为%d" % Employee.empCount)
 
