@@ -97,6 +97,9 @@ def request_book(url):
 
 
 if __name__ == '__main__':
+    # with as语句适用于对于外界资源的操作，是一种将异常处理与关闭资源简化后的语句
+    # 工作原理为with后面的对象调用其__enter__魔术方法，该方法的返回值会被赋予给as后的变量
+    # 当with语句结束后，会调用用with后面对象的__exit__魔术方法，异常处理与资源释放一般在该函数中
     with open('book.csv', 'a', newline='', encoding='utf-8') as f:
         fieldnames = ['num', 'name', 'addr', 'publisher', 'recommend', 'star', 'price']
         writer = csv.DictWriter(f, fieldnames=fieldnames)
