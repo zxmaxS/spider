@@ -6,6 +6,8 @@ from time import sleep
 
 # 所有子线程共享全局变量，当没有线程锁时就会发生混乱
 http = 1
+# 这就是线程锁，可以申请多个锁，操作系统中学过的锁
+lock = threading.Lock()
 
 
 # 自己创建的线程要继承threading类并重写run方法
@@ -20,7 +22,10 @@ class myself(threading.Thread):
     def run(self):
         print("开始线程"+self.name)
         # print_time(self.name, self.counter)
+        # 这是第一种申请锁的方式，acquire函数就是申请锁，release函数就是释放锁
+        lock.acquire()
         lock_test_add(self.counter)
+        lock.release()
         print("结束线程"+self.name)
 
 
@@ -32,7 +37,9 @@ class yourself(threading.Thread):
 
     def run(self):
         print("开始线程"+self.name)
-        lock_test_subtraction(self.counter)
+        # 这是第二种申请锁的方式，with函数可以看exercise文件
+        with lock:
+            lock_test_subtraction(self.counter)
         print("结束线程"+self.name)
 
 
@@ -75,6 +82,6 @@ thread2.start()
 thread1.join()
 thread2.join()
 
-
+# queue在线程中的应用主要是将变量存入队列中，queue自带锁机制，从而使得多线程同步，这里就不放演示了，想用的话自己看一看
 
 

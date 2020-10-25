@@ -34,6 +34,8 @@ def main():
     all_windows = driver.window_handles
     driver.switch_to.window(all_windows[1])
 
+    # 如果使用css选择器选择具有两个类的标签时，.page-item.last代表的是同时具有page-item和last类的标签
+    # .page-item .last代表的是自身含有标签last且上一级标签含有类page-item
     last_page = driver.find_element_by_css_selector(".page-item.last")
     last_page_num = last_page.text
 
@@ -46,6 +48,7 @@ def main():
         fin_return.extend(result)
         print(i)
         if i != int(last_page_num) - 1:
+            # 当有两个类时，如果使用xpath就可以直接中间加空格
             next_page = driver.find_element_by_xpath("//li[@class='page-item next']/button")
             next_page.click()
             sleep(3)
@@ -77,7 +80,7 @@ def html_parser(soup):
 
 
 if __name__ == '__main__':
-    with open('bilibili.csv', 'a', newline='', encoding='UTF-8') as f:
+    with open('result/bilibili.csv', 'a', newline='', encoding='UTF-8') as f:
         fieldName = ['title', 'link', '播放量', '弹幕数', '上传时间', 'up主']
         writer = csv.DictWriter(f, fieldnames=fieldName)
         writer.writeheader()

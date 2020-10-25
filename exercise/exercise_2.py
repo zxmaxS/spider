@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import re
 import csv
+from time import time
 
 
 def main(start):
@@ -60,14 +61,19 @@ def director_parser(director):
 
 
 if __name__ == '__main__':
-    with open('movie.csv', 'a', newline='', encoding='UTF-8') as f:
+    t1 = time()
+    # 这个newline函数我也没太搞明白，但是大概就是各个操作系统的换行符不同，在不同的操作系统上运行可能会产生错误
+    # 加上这个参数就不会发生这样的错误
+    with open('result/movie.csv', 'a', newline='', encoding='UTF-8') as f:
         fieldNames = ['name', 'picture', 'num', 'star', 'director', 'introduction']
         writer = csv.DictWriter(f, fieldnames=fieldNames)
         writer.writeheader()
         for i in range(0, 249, 25):
             print(i)
             result = main(i)
-            print(result[0])
+            # print(result[0])
             for item in result:
                 writer.writerow(item)
+    t2 = time()
+    print(t2-t1)
     # main(0)
