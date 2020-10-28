@@ -11,5 +11,22 @@ import requests  # 这个库是在urllib的基础上扩展的
 # response = req.Request("http://www.baidu.com")
 
 
-# 其他使用方法都类似，有参数就直接在括号里面加，想获得目标数据也可以直接在response里调用方法或者属性
-response = requests.get("http://www.baidu.com")
+# post就是把下面的get换成post
+# response = requests.get("http://www.baidu.com")
+# response = requests.post("http://www.baidu.com")
+
+
+# get方法除了可以直接在url中加上?，也可以直接将参数封装到一个字典中，传入头部的方法也放在下面了
+headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                      'Chrome/85.0.4183.102 Safari/537.36 '
+    }
+# response = requests.get('https://movie.douban.com/top250?start=0', headers=headers)
+# params = {
+#     'start': 0
+# }
+# response = requests.get('https://movie.douban.com/top250', params=params, headers=headers)
+
+
+
+

@@ -19,7 +19,9 @@ for i in a:
 for i in a_iter:
     print(i)
 
-
+# list合并直接使用+号就可以
+b = [5, 6, 7, 8]
+print(a+b)
 
 
 

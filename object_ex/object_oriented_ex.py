@@ -1,4 +1,5 @@
 import copy
+import time
 
 
 # 类的定义就是class加上类名就可以了
@@ -22,14 +23,20 @@ class Employee:
         # del self.empCount
         # print(self.empCount)
 
-    def displayCount():
+    def displayCount(self):
+        # 当调用同类中的其他方法时，前面要加上self
+        self.print_time()
         print("总人数为%d" % Employee.empCount)
 
     # 类中的第一个参数为self，这个参数就代表调用这个函数的对象，当你的对象使用.调用函数时，自身也会被传入
     # 传入的主要作用是调用实例变量，相当于局部变量
     def displayName(self):
+        self.print_time()
         print("名字是%s" % self.name)
         print("薪水为%s" % self.salary)
+
+    def print_time(self):
+        print(time.strftime("%H:%M:%S", time.localtime()))
 
     # 这是析构函数，在使用del方法删除对象时被调用，或者程序终止时调用
     def __del__(self):

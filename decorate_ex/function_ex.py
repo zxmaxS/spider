@@ -47,7 +47,7 @@ def outer(x, y, mod):
 #     print(result[j](5))
 
 
-# 如果想在嵌套函数总修改外部函数的值，需要nonlocal进行声明，否则会报错
+# 如果想在嵌套函数修改外部函数的值，需要nonlocal进行声明，否则会报错
 def outer_change():
     http = 10
 

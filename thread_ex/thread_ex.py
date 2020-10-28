@@ -8,6 +8,8 @@ from time import sleep
 http = 1
 # 这就是线程锁，可以申请多个锁，操作系统中学过的锁
 lock = threading.Lock()
+# 这是线程中的独立变量，可以使用同一个全局对象为每个线程创建不同的字典，但是我没找到有什么用处
+local = threading.local()
 
 
 # 自己创建的线程要继承threading类并重写run方法
@@ -26,6 +28,9 @@ class myself(threading.Thread):
         lock.acquire()
         lock_test_add(self.counter)
         lock.release()
+        # 虽然两个线程使用同一个local对象，但他们的name属性是不同的，每个线程之间相互独立
+        local.name = self.name
+        print(local.name)
         print("结束线程"+self.name)
 
 
@@ -40,6 +45,8 @@ class yourself(threading.Thread):
         # 这是第二种申请锁的方式，with函数可以看exercise文件
         with lock:
             lock_test_subtraction(self.counter)
+        local.name = self.name
+        print(local.name)
         print("结束线程"+self.name)
 
 
