@@ -22,11 +22,18 @@ headers = {
                       'Chrome/85.0.4183.102 Safari/537.36 '
     }
 # response = requests.get('https://movie.douban.com/top250?start=0', headers=headers)
-# params = {
-#     'start': 0
-# }
-# response = requests.get('https://movie.douban.com/top250', params=params, headers=headers)
+params = {
+    'start': 0
+}
+response = requests.get('https://movie.douban.com/top250', params=params, headers=headers)
 
-
-
+# 通过text方法可以获取网页源代码，网页传输过来的是01文件流，需要进行解码，response可以通过响应头判断网页的编码来进行解码
+# 解码后才是正常代码，即Unicode编码
+# print(response.text)
+# 虽然两者的输出相同，但content获取的是byte数据，即用于获得图片流然后写入图片中，而text只能爬取图片地址
+# print(response.content)
+# 可以通过encoding属性查看网页的编码
+print(response.encoding)
+# 也可以人为设定其编码
+# response.encoding = 'utf-8'
 

@@ -97,6 +97,8 @@ if __name__ == '__main__':
     page = get_page()
     t1 = time()
     # 打开txt与打开csv没啥区别，还可以像下面一样打开多个文件
+    # 编码与解码问题，所有你能认识的字符如字母，汉字，数字均为Unicode编码，当其需要存储，传输时需要进行编码，这时就会
+    # 有各种编写方式，当你想要的从窗口输出或者查看文件时会进行解码，如果解码和编码方法不同就会出现乱码
     with open('result/bili_comment.txt', 'a', encoding='UTF-8') as file_1, open('result/bili_comment_comment.txt', 'a', encoding='UTF-8') as file_2:
         mission = []
         for i in range(page):

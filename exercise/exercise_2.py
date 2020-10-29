@@ -8,6 +8,8 @@ from time import time
 def main(start):
     # 这里遇到了反爬虫机制，返回代码418，加个头部
     url = 'https://movie.douban.com/top250?start='+str(start)+'&filter='
+    # user-agent中文为用户代理，其作用是使服务器了解发送请求的终端的操作系统，浏览器版本，cpu类型等等信息，从而发送不同
+    # 的响应
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                       'Chrome/85.0.4183.102 Safari/537.36 '
