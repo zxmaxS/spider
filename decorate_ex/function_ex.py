@@ -8,15 +8,19 @@ def outer(x, y, mod):
     #     return x+y
 
     def add():
-        return x+y
+        return x + y
 
     def subtraction():
-        return x-y
+        return x - y
 
     if mod == 0:
         return add()
-    else:
+    elif mod == 1:
         return subtraction()
+    else:
+        # 这是一个匿名函数，python的匿名函数需要lambda关键词，其中冒号前面是参数，这里不需要参数，但是当作为多线程
+        # 之类的就需要参数了，后面是一个表达式，代表需要返回的内容，匿名函数只能够有一句表达式
+        return lambda: x * y
 
 
 # print(outer(2, 3, 0))
@@ -59,4 +63,8 @@ def outer_change():
     print(http)
 
 
-outer_change()
+# outer_change()
+
+# 除此之外，还可以将匿名函数赋值变量
+temp = lambda x: x * x
+print(temp(3))
