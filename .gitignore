@@ -1,4 +1,4 @@
 venv/
 .idea/
 result/
-/torch_ex/data/
+torch_ex/
