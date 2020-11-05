@@ -11,8 +11,6 @@ class Perceptron(nn.Module):
         # inplace函数代表是否进行内存覆盖
         self.relu = nn.ReLU(inplace=True)
         self.layer2 = nn.Linear(40, out_dim)
-        # 对结果进行归一化
-        self.softmax = nn.Softmax(dim=0)
         # 参数初始化
         for params in self.parameters():
             # 使用正态分布进行参数初始化，均值为0，方差为0.01
@@ -23,7 +21,6 @@ class Perceptron(nn.Module):
         x = self.layer1(x)
         x = self.relu(x)
         x = self.layer2(x)
-        x = self.softmax(x)
         return x
 
 

@@ -4,7 +4,7 @@ from torch import nn
 
 
 class Perceptron(nn.Module):
-    def __init__(self, in_dim=2, out_dim=2):
+    def __init__(self, in_dim, out_dim):
         super(Perceptron, self).__init__()
         # 使用模块内置的全连接层
         self.net = nn.Linear(in_dim, out_dim)
@@ -20,11 +20,15 @@ class Perceptron(nn.Module):
 
 
 def load_data():
-    data = np.loadtxt('data/wdbc_binary/wdbc.txt', dtype=str, skiprows=0, delimiter=',')
+    # np读取txt，后面的参数应该能看懂，读入后是一个np_array
+    data = np.loadtxt('torch_ex/data/wdbc_binary/wdbc.txt', dtype=str, skiprows=0, delimiter=',')
 
+    # 这是列表生成式，详情可以看list_ex
     feature = [data[i][2:] for i in range(len(data))]
     label = [0 if data[i][1] == 'M' else 1 for i in range(len(data))]
     # 将数据集分为训练集与测试集，这里是3:1
+    # 这里的torch.tensor与np.array类似，是将一个矩阵转变为一个tensor对象，该对象与np_array都具有dtype属性，
+    # 可以查看其自身类型，详细类型可以自己去查，astype函数是np_array用来进行变量类型转换的函数
     train_feature = torch.tensor(np.array([feature[i] for i in range(len(feature)) if i % 3 != 0]).astype(float),
                                  dtype=torch.float32)
     test_feature = torch.tensor(np.array([feature[i] for i in range(len(feature)) if i % 3 == 0]).astype(float),
