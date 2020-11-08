@@ -36,7 +36,8 @@ class ConvNet(nn.Module):
 def train(model, device, train_loader, optimizer, epoch):
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
-        # data, target = data.to(device), target.to(device)
+        # to函数是tensor进行设备类别转换的函数
+        data, target = data.to(device), target.to(device)
         optimizer.zero_grad()
         output = model(data)
         loss = F.nll_loss(output, target)
@@ -54,7 +55,7 @@ def test(model, device, test_loader):
     correct = 0
     with torch.no_grad():
         for data, target in test_loader:
-            # data, target = data.to(device), target.to(device)
+            data, target = data.to(device), target.to(device)
             output = model(data)
             test_loss += F.nll_loss(output, target, reduction='sum').item()
             pred = output.max(1, keepdim=True)[1]
@@ -89,7 +90,27 @@ if __name__ == '__main__':
                            transforms.Normalize((0.1307,), (0.3081,))
                        ])), batch_size=batch, shuffle=True
     )
-    device = torch.device("cuda:0")
+    # 深度学习与神经网络计算任务之间不相互依赖，gpu可以进行大量的并行计算，而cpu除了计算任务，还包含其他的逻辑任务
+    # 所以cpu的计算能力不如gpu
+    # device类是一种用来将torch类型数据转变为使用于硬件计算的类，使用字符串来进行硬件分配，其中cuda代表gpu，
+    # 冒号后面为所选设备的标号，从0开始计算，需要注意的是device函数不会检查你的硬件是否满足条件，等到后面转换会进行报错
+    # 模型和数据的计算设备需要相同，两者默认设备均为cpu，如果想要更换为gpu，需要先判断gpu是否可用
+    if torch.cuda.is_available():
+        # 将模型中的参数转为gpu计算，可传入参数为gpu序号，默认参数为当前设备
+        model.cuda(0)
+        device = torch.device("cuda:0")
+    else:
+        device = torch.device("cpu")
+    # 如果想使用cpu计算，则传入cpu
+    # device = torch.device("cpu")
+    # 如果想使用当前设备，则不需进行标号
+    # device = torch.device("cuda")
+    # 查看当前设备有多少gpu
+    # num = torch.cuda.device_count()
+    # print(num)
+    # 查看当前设备正在使用的gpu标号
+    # num = torch.cuda.current_device()
+    # print(num)
     train(model, device, train_loader, optimizer, epoch)
     test(model, device, test_loader)
 

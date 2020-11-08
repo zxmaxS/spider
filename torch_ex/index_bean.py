@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 from torch import nn
+import matplotlib.pyplot as plt
 
 
 class Perceptron(nn.Module):
@@ -111,6 +112,12 @@ if __name__ == '__main__':
         result.append(correct)
     # 输出最大准确率
     print(max(result))
+    plt.plot(range(epoch), result, 'ro-')
+    plt.title('Feedforward neural network')
+    plt.xlabel('epoch')
+    plt.ylabel('accuracy')
+    plt.legend()
+    plt.show()
 
 
 

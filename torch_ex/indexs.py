@@ -1,17 +1,25 @@
 import numpy as np
 import torch
 from torch import nn
+import matplotlib.pyplot as plt
 
 
+# 自定义的类本身也可以作为其他类的一部分，虽然这里只有一层全连接层，如果存在两到三层，就可以减化深度网络的编写，
+# 还可以对神经网络进行分块处理
 class Perceptron(nn.Module):
     def __init__(self, in_dim, out_dim):
         super(Perceptron, self).__init__()
         # 使用模块内置的全连接层
         self.net = nn.Linear(in_dim, out_dim)
         # 参数初始化
-        for params in self.net.parameters():
+        # parameters()函数会返回该类中的所有参数，如果你只想对某一层的参数进行初始化，可以使用self.net.parameters()
+        # 除此之外，还可以用self.named_parameters()同时返回name和params
+        # for name, params in self.named_parameters():
+        for params in self.parameters():
+            # print(params)
             # 使用正态分布进行参数初始化，均值为0，方差为0.01
             nn.init.normal_(params, mean=0, std=0.01)
+            # print(params)
 
     # 输入数据在模型中前向传播的计算过程
     def forward(self, x):
@@ -29,11 +37,14 @@ def load_data():
     # 将数据集分为训练集与测试集，这里是3:1
     # 这里的torch.tensor与np.array类似，是将一个矩阵转变为一个tensor对象，该对象与np_array都具有dtype属性，
     # 可以查看其自身类型，详细类型可以自己去查，astype函数是np_array用来进行变量类型转换的函数
+    # tensor的创建总是复制数据
     train_feature = torch.tensor(np.array([feature[i] for i in range(len(feature)) if i % 3 != 0]).astype(float),
                                  dtype=torch.float32)
     test_feature = torch.tensor(np.array([feature[i] for i in range(len(feature)) if i % 3 == 0]).astype(float),
                                 dtype=torch.float32)
 
+    # 除此之外，还可以直接由np_array生成torch，生成的torch与np_array共享内存，即两者是别名的关系
+    # dataset = torch.from_numpy(feature)
     train_label = torch.tensor(np.array([label[i] for i in range(len(label)) if i % 3 != 0]),
                                dtype=torch.int64)
     test_label = torch.tensor(np.array([label[i] for i in range(len(label)) if i % 3 == 0]),
@@ -74,7 +85,9 @@ def test(test_loader, model):
     with torch.no_grad():
         for i, (feature, label) in enumerate(test_loader):
             output = model(feature)
-            # 获取计算最大值的下标
+            # fork函数用于获取最大值及其下标，第一个参数为前k个最大值，这里只需要最大的值，第二个参数为所需的维度，从
+            # 0开始算，如果觉得维度蒙的话建议好好想一想，第三个参数为True返回最大值，否则为最小值，第四个参数为True
+            # 返回的结果会进行排序，否则不会，返回的_代表最大值的值，pred代表最大值的下标
             _, pred = output.topk(1, 1, True, True)
             # view函数改变label变量的形状，使其与pred形状相同，然后使用sum函数进行求和，算出正确的个数
             correct += pred.eq(label.view(-1, 1)).sum(0, keepdim=True)
@@ -103,6 +116,12 @@ if __name__ == '__main__':
         result.append(correct)
     # 输出最大准确率
     print(max(result))
+    plt.plot(range(epoch), result, 'ro-')
+    plt.title('Perceptron')
+    plt.xlabel('epoch')
+    plt.ylabel('accuracy')
+    plt.legend()
+    plt.show()
 
 
 
