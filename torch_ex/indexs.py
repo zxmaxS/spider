@@ -50,9 +50,6 @@ def load_data():
     test_label = torch.tensor(np.array([label[i] for i in range(len(label)) if i % 3 == 0]),
                               dtype=torch.int64)
 
-    # train_label = train_label.type(torch.LongTensor)
-    # test_label = test_label.type(torch.LongTensor)
-
     # 将训练集与测试集的特征与标签合并
     train_data = torch.utils.data.TensorDataset(train_feature, train_label)
     test_data = torch.utils.data.TensorDataset(test_feature, test_label)

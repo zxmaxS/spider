@@ -7,6 +7,7 @@ from torchvision import datasets, transforms
 class ConvNet(nn.Module):
     def __init__(self):
         super(ConvNet, self).__init__()
+        # 卷积与池化均分为1d，2d，3d，分别代表1，2，3维的数据，下面就是一个二维卷积
         self.conv1 = nn.Conv2d(1, 6, 5, padding=2)
         self.pool1 = nn.MaxPool2d(2, 2)
         self.conv2 = nn.Conv2d(6, 16, 5)
@@ -43,7 +44,7 @@ def train(model, device, train_loader, optimizer, epoch):
         loss = F.nll_loss(output, target)
         loss.backward()
         optimizer.step()
-        if (batch_idx+1)%30 == 0:
+        if (batch_idx+1) % 30 == 0:
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),
                        100.0 * batch_idx / len(train_loader), loss.item()))
@@ -59,6 +60,7 @@ def test(model, device, test_loader):
             output = model(data)
             test_loss += F.nll_loss(output, target, reduction='sum').item()
             pred = output.max(1, keepdim=True)[1]
+            # item函数是将tensor转变为int或者float的函数
             correct += pred.eq(target.view_as(pred)).sum().item()
     test_loss /= len(test_loader.dataset)
     print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
@@ -77,14 +79,14 @@ if __name__ == '__main__':
     optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 
     train_loader = torch.utils.data.DataLoader(
-        datasets.MNIST('data', train=True, download=True,
+        datasets.MNIST('torch_ex/data', train=True, download=True,
                        transform=transforms.Compose([
                            transforms.ToTensor(),
                            transforms.Normalize((0.1307,), (0.3081,))
                        ])), batch_size=batch, shuffle=True
     )
     test_loader = torch.utils.data.DataLoader(
-        datasets.MNIST('data', train=False,
+        datasets.MNIST('torch_ex/data', train=False,
                        transform=transforms.Compose([
                            transforms.ToTensor(),
                            transforms.Normalize((0.1307,), (0.3081,))
