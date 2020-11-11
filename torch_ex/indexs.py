@@ -50,7 +50,7 @@ def load_data():
     test_label = torch.tensor(np.array([label[i] for i in range(len(label)) if i % 3 == 0]),
                               dtype=torch.int64)
 
-    # 将训练集与测试集的特征与标签合并
+    # 将训练集与测试集的特征与标签合并，生成的为TensorDataset类，用于后面进行切分，实际上就是将特征与标签放到一个元组中
     train_data = torch.utils.data.TensorDataset(train_feature, train_label)
     test_data = torch.utils.data.TensorDataset(test_feature, test_label)
     return train_data, test_data
@@ -60,6 +60,7 @@ def load_data():
 def train(train_loader, model, criterion, optimizer):
     # 启用batchNormalization和dropout
     model.train()
+    # enumerate函数用途是将一个可迭代对象的下标作为第一个变量输出出来
     for i, (feature, label) in enumerate(train_loader):
         # 获得训练结果
         output = model(feature)
@@ -87,6 +88,7 @@ def test(test_loader, model):
             # 返回的结果会进行排序，否则不会，返回的_代表最大值的值，pred代表最大值的下标
             _, pred = output.topk(1, 1, True, True)
             # view函数改变label变量的形状，使其与pred形状相同，然后使用sum函数进行求和，算出正确的个数
+            # eq函数用于比较两个tensor是否完全相同，如果是会返回1
             correct += pred.eq(label.view(-1, 1)).sum(0, keepdim=True)
     return correct[0] * 100.0/len(test_data)
 
@@ -102,7 +104,9 @@ if __name__ == '__main__':
     criterion = nn.CrossEntropyLoss()
     # 优化器，这里是选用了随机梯度下降的方法
     optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
-    # 将训练数据分成一个个batch
+    # 将训练数据分成一个个batch，需要TensorDataset类作为输入数据，返回一个迭代器，后面的shuffle参数代表
+    # 每次取后是否打乱顺序，这个函数会将所有的数据分为batch_size大小，你每次调用train_loader，他都会重新进行
+    # 分块
     train_loader = torch.utils.data.DataLoader(train_data, batch_size=batch_size, shuffle=True)
     test_loader = torch.utils.data.DataLoader(test_data, batch_size=batch_size, shuffle=False)
     result = []
