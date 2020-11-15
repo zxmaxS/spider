@@ -97,6 +97,7 @@ if __name__ == '__main__':
     # 读取数据
     train_data, test_data = load_data()
     model = Perceptron(in_dim=30, out_dim=2)
+    # model = torch.load('torch_ex/models/indexs.pkl')
     epoch = 75
     batch_size = 20
     learning_rate = 0.1
@@ -123,6 +124,7 @@ if __name__ == '__main__':
     plt.ylabel('accuracy')
     plt.legend()
     plt.show()
+    # torch.save(model, 'torch_ex/models/indexs.pkl')
 
 
 

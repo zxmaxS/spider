@@ -14,14 +14,14 @@ class ConvNet(nn.Module):
         self.conv1 = nn.Conv2d(1, 6, 5, padding=2)
         # BatchNorm函数是一个归一化函数，其作用是将卷积后的数据分布重新变为均值为0的正太分布，由于sigmod等函数在
         # 0附近的梯度较大，从而增加模型收敛速度，传入一个参数，为数据的通道数
-        self.bn1 = nn.BatchNorm2d(6)
+        # self.bn1 = nn.BatchNorm2d(6)
         # 这里是最大池化，除此之外还有平均池化AvgPool
         # 第一个参数是范围大小，第二个参数是步长，默认为范围大小
         # 池化后变为14*14
         self.pool1 = nn.MaxPool2d(2, 2)
         # 再次卷积变为10*10
         self.conv2 = nn.Conv2d(6, 16, 5)
-        self.bn2 = nn.BatchNorm2d(16)
+        # self.bn2 = nn.BatchNorm2d(16)
         # 再次池化变为5*5
         self.pool2 = nn.MaxPool2d(2, 2)
         # 再次卷积就成为了一维的变量，下面直接使用全连接层
@@ -33,12 +33,12 @@ class ConvNet(nn.Module):
 
     def forward(self, x):
         out = self.conv1(x)
-        out = self.bn1(out)
+        # out = self.bn1(out)
         # 激活层在卷积和池化之间
         out = F.relu(out)
         out = self.pool1(out)
         out = self.conv2(out)
-        out = self.bn2(out)
+        # out = self.bn2(out)
         out = F.relu(out)
         out = self.pool2(out)
         out = self.conv3(out)
@@ -51,7 +51,7 @@ class ConvNet(nn.Module):
         return out
 
 
-def train(model, device, train_loader, optimizer, epoch):
+def train(model, device, train_loader, optimizer):
     model.train()
     result = []
     for batch_idx, (data, target) in enumerate(train_loader):
@@ -64,8 +64,8 @@ def train(model, device, train_loader, optimizer, epoch):
         optimizer.step()
         if (batch_idx+1) % 30 == 0:
             result.append(loss.item())
-            print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                epoch, batch_idx * len(data), len(train_loader.dataset),
+            print('[{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
+                batch_idx * len(data), len(train_loader.dataset),
                        100.0 * batch_idx / len(train_loader), loss.item()))
     return result
 
@@ -89,15 +89,15 @@ def test(model, device, test_loader):
 
 
 if __name__ == '__main__':
-    model = ConvNet()
-    epoch = 75
+    # model = ConvNet()
+    model = torch.load('torch_ex/models/manual.pkl')
     batch = 20
     learning_rate = 0.1
     # 损失函数，这里是交叉熵损失函数
     criterion = nn.CrossEntropyLoss()
-    # 优化器，这里是选用了随机梯度下降的方法
+    # 优化器，这里是随机梯度下降与adam算法
     optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
-    # optimizer = torch.optim.RMSprop(model.parameters(), lr=learning_rate, alpha=0.99)
+    # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, betas=(0.9, 0.999), eps=1e-08)
     train_loader = torch.utils.data.DataLoader(
         # 第二个参数表示是否是训练集，第三个参数表示是否下载
         datasets.MNIST('torch_ex/data', train=True, download=True,
@@ -140,7 +140,7 @@ if __name__ == '__main__':
     # 查看当前设备正在使用的gpu标号
     # num = torch.cuda.current_device()
     # print(num)
-    result = train(model, device, train_loader, optimizer, epoch)
+    result = train(model, device, train_loader, optimizer)
     test(model, device, test_loader)
     plt.plot(range(100), result, 'ro-')
     plt.title('Conv')
@@ -148,6 +148,7 @@ if __name__ == '__main__':
     plt.ylabel('loss')
     plt.legend()
     plt.show()
+    torch.save(model, 'torch_ex/models/manual.pkl')
 
 
 
