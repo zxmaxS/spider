@@ -164,7 +164,6 @@ if __name__ == '__main__':
             # 训练判别器
             # 清空梯度
             optimizer_D.zero_grad()
-
             # 计算真与假图片的loss值，并取均值
             validity_real = discriminator(real_imgs, labels)
             d_real_loss = adversarial_loss(validity_real, valid)
