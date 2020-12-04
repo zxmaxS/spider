@@ -83,7 +83,7 @@ def test(test_loader, model):
     with torch.no_grad():
         for i, (feature, label) in enumerate(test_loader):
             output = model(feature)
-            # fork函数用于获取最大值及其下标，第一个参数为前k个最大值，这里只需要最大的值，第二个参数为所需的维度，从
+            # topk函数用于获取最大值及其下标，第一个参数为前k个最大值，这里只需要最大的值，第二个参数为所需的维度，从
             # 0开始算，如果觉得维度蒙的话建议好好想一想，第三个参数为True返回最大值，否则为最小值，第四个参数为True
             # 返回的结果会进行排序，否则不会，返回的_代表最大值的值，pred代表最大值的下标
             _, pred = output.topk(1, 1, True, True)

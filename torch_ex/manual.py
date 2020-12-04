@@ -89,8 +89,11 @@ def test(model, device, test_loader):
 
 
 if __name__ == '__main__':
-    # model = ConvNet()
-    model = torch.load('torch_ex/models/manual.pkl')
+    # 这样是只读取参数进入模型
+    model = ConvNet()
+    model.load_state_dict(torch.load('torch_ex/models/manual_dict.pkl'))
+    # 这样是直接读入整个模型
+    # model = torch.load('torch_ex/models/manual.pkl')
     batch = 20
     learning_rate = 0.1
     # 损失函数，这里是交叉熵损失函数
@@ -142,14 +145,21 @@ if __name__ == '__main__':
     # print(num)
     result = train(model, device, train_loader, optimizer)
     test(model, device, test_loader)
+    # state_dict()函数是将模型中的可学习参数变为一个字典
+    # for param in model.state_dict():
+    #     print(param)
+    #     print(model.state_dict()[param])
     plt.plot(range(100), result, 'ro-')
     plt.title('Conv')
     plt.xlabel('epoch')
     plt.ylabel('loss')
     plt.legend()
     plt.show()
-    torch.save(model, 'torch_ex/models/manual.pkl')
-
+    # 这样是将整个模型保存下来，不推荐
+    # torch.save(model, 'torch_ex/models/manual.pkl')
+    # 这样是只将参数保存下来，推荐
+    # 如果想一次存入多个不同的数据，方便后面取出，可以将数据先存到字典中，再将字典存入文件
+    torch.save(model.state_dict(), 'torch_ex/models/manual_dict.pkl')
 
 
 

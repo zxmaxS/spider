@@ -17,10 +17,12 @@ class Generator(nn.Module):
             layers = [nn.Linear(in_feat, out_feat)]
             if normalize:
                 layers.append(nn.BatchNorm1d(out_feat, 0.8))
+            # leaky_relu就是x负轴上有一个预先设立的很小的斜率
             layers.append(nn.LeakyReLU(0.2, inplace=True))
             return layers
 
-        # 使用sequent打包四个block后，使用全连接层生成图像，并调用激活函数
+        # 使用sequent打包四个block后，使用全连接层生成图像，并调用激活函数，sequential函数类似于一个list
+        # 当包装之后类似
         self.model = nn.Sequential(
             *block(latent_dim, 128, normalize=False),
             *block(128, 256),
@@ -61,7 +63,7 @@ class Discriminator(nn.Module):
 
 if __name__ == '__main__':
     # 训练次数以及分块大小
-    n_epochs = 200
+    n_epochs = 10
     batch_size = 100
     # 优化器参数
     lr = 0.0002
